@@ -27,6 +27,7 @@ def loading_news_model():
     return pipe
 lawspipe = loading_news_model()
 
+
 #OPTIONS
 length_penalty = 1
 num_beams = 8
@@ -52,38 +53,42 @@ if "formbtn_state" not in st.session_state:
 if formbtn or st.session_state.formbtn_state:
     st.session_state.formbtn_state = True
     if txt != "":
-        with st.form(key = 'choice'):
-            dieu_dict = utils.create_Dict(txt)
-            if (len(dieu_dict) >0):
-                btns=[]
-                for key, val in dieu_dict.items():
-                    btns.append(key)
-                genre = st.radio("Which part to summarize: ", btns)
+        dieu_dict = utils.create_Dict(txt)
+        if (len(dieu_dict) >0):
+            btns=[]
+            captions = []
+            for key, val in dieu_dict.items():
+                btns.append(key)
+                captions.append(val)
+            source = dieu_dict.get(btns[0])
+            with st.form(key = 'choice'):
+                placeholder_for_radio = st.empty()
+                placeholder_for_texta = st.empty()
                 submit_form = st.form_submit_button(label="Summary", help="Click to Summary", use_container_width=True)
-                if submit_form:
-                    source = dieu_dict.get(genre)
-                    my_bar.progress(0, text="Applying TF-IDF...")
+                
+            with placeholder_for_radio:
+                genre = st.radio("Which part to summarize: ", btns, index=0)
+                source = dieu_dict.get(genre)
+            
+            with placeholder_for_texta:
+                st.text_area("input",label_visibility="hidden",value=source,disabled=True)
+        else:
+            with st.form(key = 'choice'):
+                submit_form = st.form_submit_button(label="Summary", help="Click to Summary", use_container_width=True)
 
-                    tfidf_txt = utils.TF_IDF(source, max_char)
-                    my_bar.progress(50, text="Summarizing...")
+        if submit_form:
+            my_bar.progress(0, text="Applying TF-IDF...")
 
-                    custom_dialogue=tfidf_txt
-                    gen_kwargs = {'length_penalty': length_penalty, 'num_beams': num_beams, 'use_cache':True}
-                    summary = lawspipe(custom_dialogue, **gen_kwargs)
+            tfidf_txt = utils.TF_IDF(source, max_char)
+            my_bar.progress(50, text="Summarizing...")
 
-                    my_bar.progress(100, text="Finish!")
-                    showdialog(summary[0]["summary_text"])
-            else:
-                my_bar.progress(0, text="Applying TF-IDF...")
+            custom_dialogue=tfidf_txt
+            gen_kwargs = {'length_penalty': length_penalty, 'num_beams': num_beams, 'use_cache':True}
+            summary = lawspipe(custom_dialogue, **gen_kwargs)
 
-                tfidf_txt = utils.TF_IDF(txt, max_char)
-                my_bar.progress(50, text="Summarizing...")
-
-                custom_dialogue=tfidf_txt
-                gen_kwargs = {'length_penalty': length_penalty, 'num_beams': num_beams, 'use_cache':True}
-                summary = lawspipe(custom_dialogue, **gen_kwargs)
-
-                my_bar.progress(100, text="Finish!")
-                showdialog(summary[0]["summary_text"])
+            my_bar.progress(100, text="Finish!")
+            showdialog(summary[0]["summary_text"])
+            
+                
     else:
         st.error("Please enter text!")
