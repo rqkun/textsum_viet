@@ -19,13 +19,13 @@ st.markdown("<h1 style='text-align: center; '>Law Summary</h1>", unsafe_allow_ht
 utils.add_logo()
 
 @st.cache_resource
-def loading_news_model():
+def loading_laws_model():
     path=main.App.config().get(section='PATH', option='LAWS_MODEL_PATH')
     with st.spinner('Loading Model...'):
         from transformers import pipeline
         pipe = pipeline('summarization', model=path)
     return pipe
-lawspipe = loading_news_model()
+lawspipe = loading_laws_model()
 
 
 #OPTIONS
