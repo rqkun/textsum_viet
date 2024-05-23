@@ -5,6 +5,10 @@ from nltk.stem import PorterStemmer
 import math
 import nltk
 
+from bs4 import BeautifulSoup
+import pandas as pd
+import requests
+
 STOP_PATH='./corpo/vietnamese-stopwords.txt'
 
 try:
@@ -239,6 +243,99 @@ def create_Dict(input) -> dict:
         Dieu_dict[content[:EndLine]] = content[EndLine+1:]
 
     return Dieu_dict
+
+def get_latest_news():
+    response = requests.get('https://newsdata.io/api/1/latest?country=vi&domain=danviet&apikey=pub_444565f16afae854bd6a1d0205b18e494686f')
+    API_Data = response.json() 
+    danviet_API_Data = API_Data["results"]
+
+
+    response = requests.get('https://newsdata.io/api/1/latest?country=vi&domain=tuoitre&apikey=pub_444565f16afae854bd6a1d0205b18e494686f')
+    API_Data = response.json()
+    tuoitre_API_Data = API_Data["results"]
+
+
+    response = requests.get('https://newsdata.io/api/1/latest?country=vi&domain=laodong_vn&apikey=pub_444565f16afae854bd6a1d0205b18e494686f')
+    API_Data = response.json()
+    laodong_API_Data = API_Data["results"]
+
+
+    response = requests.get('https://newsdata.io/api/1/latest?country=vi&domain=vnexpress&apikey=pub_444565f16afae854bd6a1d0205b18e494686f')
+    API_Data = response.json()
+    vnexpress_API_Data = API_Data["results"]
+
+
+    danviet_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+
+    for item in danviet_API_Data:
+        if item["image_url"] == None: continue
+        page = requests.get(item["link"], verify=False)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        content_body = soup.find("div", attrs={"class":"entry-body dtdefault clearfix", "data-role":"content"})
+        if content_body == None: continue
+        content = ""
+        for text in content_body.find_all("p"):
+            content = content + text.get_text() + " "
+        danviet_df = danviet_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+
+
+    tuoitre_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+
+    for item in tuoitre_API_Data:
+        if item["image_url"] == None: continue
+        page = requests.get(item["link"], verify=False)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        content_body = soup.find("div", attrs={"class":"detail-content afcbc-body", "data-role":"content"})
+        if content_body == None: continue
+        content = ""
+        for text in content_body.find_all("p"):
+            content = content + text.get_text() + " "
+        tuoitre_df = tuoitre_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+
+    laodong_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+
+    for item in laodong_API_Data:
+        if item["image_url"] == None: continue
+        page = requests.get(item["link"], verify=False)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        content_body = soup.find("div", attrs={"id":"gallery-ctt", "class":"art-body"})
+        if content_body == None: continue
+        content = ""
+        for text in content_body.find_all("p"):
+            content = content + text.get_text() + " "
+        laodong_df = laodong_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+
+    vnexpress_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+
+    for item in vnexpress_API_Data:
+        if item["image_url"] == None: continue
+        page = requests.get(item["link"], verify=False)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        content = ""
+        for small_content in soup.find_all("p", attrs={"class":"Normal"}):
+            if small_content.get('style') != None:
+                if small_content['style'] == "text-align:right;":
+                    continue
+            if small_content.get('align') != None:
+                if small_content['align'] == "right":
+                    continue
+            small_content_text = small_content.get_text()
+            if small_content == None: 
+                break
+            if "Video: " in small_content_text:
+                break
+            content = content + small_content_text + " "
+        vnexpress_df = vnexpress_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+
+    frames = [danviet_df.head(4), tuoitre_df.head(4), laodong_df.head(4), vnexpress_df.head(4)]
+    latest_new_df = pd.concat(frames)
+    latest_new_df.reset_index(inplace=True, drop=True)
+    return(latest_new_df)
+
 
 def add_logo():
     st.markdown(
