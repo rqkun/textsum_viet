@@ -100,7 +100,7 @@ def text_preprocessing(sentence):
 
     clean_words = None
     words = word_tokenize(sentence)
-    words = [ps.stem(word.lower()) for word in words if word.isalnum()]
+    words = [PorterStemmer.stem(word.lower()) for word in words if word.isalnum()]
     clean_words = [word for word in words if word not in stop_words]
 
     return clean_words
