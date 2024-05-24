@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import requests
 
+from string import ascii_lowercase
+
 STOP_PATH='./corpo/vietnamese-stopwords.txt'
 
 try:
@@ -17,6 +19,38 @@ except LookupError:
     nltk.download('punkt')
 #ps = PorterStemmer()
 
+
+def add_dot(input):
+    EndLine = (input.replace('\n', '™'))
+
+    EndLinePos = EndLine.find('™')
+    while EndLinePos != -1:
+        if EndLine[EndLinePos-1] == ".":
+            EndLine = EndLine[:EndLinePos] + "\n" + EndLine[EndLinePos+1:]
+        elif EndLine[EndLinePos-1] == ":" or EndLine[EndLinePos-1] == ";" or EndLine[EndLinePos-1] == ",":
+            EndLine = EndLine[:EndLinePos-1] + ".\n" + EndLine[EndLinePos+1:]
+        else:
+            EndLine = EndLine[:EndLinePos] + ".\n" + EndLine[EndLinePos+1:]
+        EndLinePos = EndLine.find('™')
+    return(EndLine)
+
+def remove_unnecessary(input):
+
+    for dieu in range(1, 100):
+        sub_str = "Điều " + str(dieu) + "."
+        new_sub_str = "Điều " + str(dieu) + "_"
+        input = input.replace(sub_str, new_sub_str)
+
+    for num in range(1, 100):
+        sub_str = str(num) + ". "
+        input = input.replace(sub_str, "")
+
+    for char in ascii_lowercase:
+        sub_str = str(char) + ") "
+        input = input.replace(sub_str, "")
+    
+    input = input.replace("_", ".")
+    return input
 
 def sent_preprocessing(sentences: list) -> list:
     cleaned_sentencs = [sent for sent in sentences if sent]
@@ -336,6 +370,20 @@ def get_latest_news():
     latest_new_df.reset_index(inplace=True, drop=True)
     return(latest_new_df)
 
+def get_law_from_url(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")
+
+    content = ""
+    for line in soup.find_all("p"):
+        content += line.get_text()[:len(line.get_text())]
+    
+    content = content.replace("\t", "")
+
+    content = add_dot(content)
+    content = remove_unnecessary(content)
+
+    return content
 
 def add_logo():
     st.markdown(
