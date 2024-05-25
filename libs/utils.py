@@ -10,8 +10,8 @@ import pandas as pd
 import requests
 from string import ascii_lowercase
 
-import TFIDF_law
-import TFIDF_news
+from libs import TFIDF_law
+from libs import TFIDF_news
 
 STOP_PATH='./corpo/vietnamese-stopwords.txt'
 
@@ -103,7 +103,7 @@ def get_latest_news():
     vnexpress_API_Data = API_Data["results"]
 
 
-    danviet_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+    danviet_df = pd.DataFrame(columns=["title", "abstract", "content", "link", "image_url"])
 
     for item in danviet_API_Data:
         if item["image_url"] == None: continue
@@ -115,10 +115,10 @@ def get_latest_news():
         content = ""
         for text in content_body.find_all("p"):
             content = content + text.get_text() + " "
-        danviet_df = danviet_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+        danviet_df = danviet_df._append({"title":item["title"], "abstract":item["description"], "content":content, "link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")},  ignore_index=True)
 
 
-    tuoitre_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+    tuoitre_df = pd.DataFrame(columns=["title", "abstract", "content", "link", "image_url"])
 
     for item in tuoitre_API_Data:
         if item["image_url"] == None: continue
@@ -130,9 +130,9 @@ def get_latest_news():
         content = ""
         for text in content_body.find_all("p"):
             content = content + text.get_text() + " "
-        tuoitre_df = tuoitre_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+        tuoitre_df = tuoitre_df._append({"title":item["title"], "abstract":item["description"], "content":content,"link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
 
-    laodong_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+    laodong_df = pd.DataFrame(columns=["title", "abstract", "content", "link", "image_url"])
 
     for item in laodong_API_Data:
         if item["image_url"] == None: continue
@@ -144,9 +144,9 @@ def get_latest_news():
         content = ""
         for text in content_body.find_all("p"):
             content = content + text.get_text() + " "
-        laodong_df = laodong_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+        laodong_df = laodong_df._append({"title":item["title"], "abstract":item["description"], "content":content,"link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
 
-    vnexpress_df = pd.DataFrame(columns=["title", "abstract", "content", "image_url"])
+    vnexpress_df = pd.DataFrame(columns=["title", "abstract", "content", "link", "image_url"])
 
     for item in vnexpress_API_Data:
         if item["image_url"] == None: continue
@@ -167,7 +167,7 @@ def get_latest_news():
             if "Video: " in small_content_text:
                 break
             content = content + small_content_text + " "
-        vnexpress_df = vnexpress_df._append({"title":item["title"], "abstract":item["description"], "content":content, "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
+        vnexpress_df = vnexpress_df._append({"title":item["title"], "abstract":item["description"], "content":content,"link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
 
     frames = [danviet_df.head(4), tuoitre_df.head(4), laodong_df.head(4), vnexpress_df.head(4)]
     latest_new_df = pd.concat(frames)

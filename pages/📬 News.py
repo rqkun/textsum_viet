@@ -48,7 +48,7 @@ with col2:
 if sumbt:
     if txt != "":
         my_bar.progress(0, text="Applying TF-IDF...")
-        tfidf_txt = utils.TF_IDF(txt, max_char)
+        tfidf_txt = utils.TF_IDF_news(txt, max_char)
         my_bar.progress(50, text="Summarizing...")
 
         custom_dialogue=tfidf_txt
@@ -61,28 +61,3 @@ if sumbt:
         
     else:
         st.error("Please enter text!")
-
-st.divider()
-@st.experimental_fragment
-def fragment():
-    with st.spinner('Loading recent news...'):
-        import time
-        ucol1,ucol2,ucol3,ucol4= st.columns(4)
-        time.sleep(2)
-        with ucol1:
-            st.image('https://i.imgur.com/pt3bm6Ml.png',use_column_width="always", caption='Sunrise by the mountains')
-            st.link_button("Go","https://google.com",use_container_width=True)
-        time.sleep(2)
-        with ucol2:
-            st.image('https://i.imgur.com/pt3bm6Ml.png',use_column_width="always", caption='Sunrise by the mountains')
-            st.link_button("Go","https://google.com",use_container_width=True)
-        time.sleep(2)
-        with ucol3:
-            st.image('https://i.imgur.com/pt3bm6Ml.png',use_column_width="always", caption='Sunrise by the mountains')
-            st.link_button("Go","https://google.com",use_container_width=True)
-        time.sleep(2)
-        with ucol4:
-            st.image('https://i.imgur.com/pt3bm6Ml.png',use_column_width="always", caption='Sunrise by the mountains')
-            st.link_button("Go","https://google.com",use_container_width=True)
-
-fragment()
