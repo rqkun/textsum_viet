@@ -94,7 +94,7 @@ def text_preprocessing(sentence):
     # print('Preprocessing text')
 
     stop_words = set()
-    with open('vietnamese-stopwords.txt', "r+", encoding="utf-8") as f:
+    with open(STOP_PATH, "r+", encoding="utf-8") as f:
         for line in f:
             stop_words.add(line[:-1])
 

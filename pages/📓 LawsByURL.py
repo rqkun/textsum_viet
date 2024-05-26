@@ -38,8 +38,8 @@ with st.sidebar:
     length_penalty = st.slider("Length penalty", 0.5, 1.0, 1.0, 0.1)
     num_beams = st.slider("Number of beams", 1, 10, 8)
 #MAIN
-txt = st.text_area("Input text",label_visibility="collapsed")
-progress_text = "Enter the text for summary."
+url = st.text_input("Input URL",label_visibility="collapsed")
+progress_text = "Enter the URL."
 
 col1,col2=st.columns(2)
 with col1:
@@ -52,7 +52,8 @@ if "formbtn_state" not in st.session_state:
 
 if formbtn or st.session_state.formbtn_state:
     st.session_state.formbtn_state = True
-    if txt != "":
+    if url != "":
+        txt = utils.get_law_from_url(url)
         dieu_dict = utils.create_Dict(txt)
         if (len(dieu_dict) >0):
             btns=[]
