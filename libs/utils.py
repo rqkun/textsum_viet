@@ -114,7 +114,8 @@ def get_latest_news():
         if content_body == None: continue
         content = ""
         for text in content_body.find_all("p"):
-            content = content + text.get_text() + " "
+            if text.get_text() not in content:
+                content = content + text.get_text() + " "
         danviet_df = danviet_df._append({"title":item["title"], "abstract":item["description"], "content":content, "link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")},  ignore_index=True)
 
 
@@ -129,7 +130,8 @@ def get_latest_news():
         if content_body == None: continue
         content = ""
         for text in content_body.find_all("p"):
-            content = content + text.get_text() + " "
+            if text.get_text() not in content:
+                content = content + text.get_text() + " "
         tuoitre_df = tuoitre_df._append({"title":item["title"], "abstract":item["description"], "content":content,"link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
 
     laodong_df = pd.DataFrame(columns=["title", "abstract", "content", "link", "image_url"])
@@ -143,7 +145,8 @@ def get_latest_news():
         if content_body == None: continue
         content = ""
         for text in content_body.find_all("p"):
-            content = content + text.get_text() + " "
+            if text.get_text() not in content:
+                content = content + text.get_text() + " "
         laodong_df = laodong_df._append({"title":item["title"], "abstract":item["description"], "content":content,"link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
 
     vnexpress_df = pd.DataFrame(columns=["title", "abstract", "content", "link", "image_url"])
@@ -166,7 +169,8 @@ def get_latest_news():
                 break
             if "Video: " in small_content_text:
                 break
-            content = content + small_content_text + " "
+            if text.get_text() not in content:
+                content = content + small_content_text + " "
         vnexpress_df = vnexpress_df._append({"title":item["title"], "abstract":item["description"], "content":content,"link":item["link"], "image_url":(item["image_url"]).replace(".webp", "")}, ignore_index=True)
 
     frames = [danviet_df.head(4), tuoitre_df.head(4), laodong_df.head(4), vnexpress_df.head(4)]
