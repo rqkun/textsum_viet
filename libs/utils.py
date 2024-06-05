@@ -193,6 +193,10 @@ def get_law_from_url(url):
 
     return content
 
+def is_url(url):
+    if "https://" not in url: return False
+    return True
+
 def add_logo():
     st.markdown(
         """

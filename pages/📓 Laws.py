@@ -37,6 +37,7 @@ st.sidebar.header("Custom generation options:")
 with st.sidebar:
     length_penalty = st.slider("Length penalty", 0.5, 1.0, 1.0, 0.1)
     num_beams = st.slider("Number of beams", 1, 10, 8)
+    input_option = st.selectbox("Text or URL?", ("Text", "URL"))
 #MAIN
 txt = st.text_area("Input text",label_visibility="collapsed")
 progress_text = "Enter the text for summary."
@@ -52,7 +53,16 @@ if "formbtn_state" not in st.session_state:
 
 if formbtn or st.session_state.formbtn_state:
     st.session_state.formbtn_state = True
+
     if txt != "":
+        if input_option == "URL":
+            if utils.is_url(txt) == False:
+                st.error("Input is not an url!")
+            law_from_url = utils.get_law_from_url(txt)
+            txt = law_from_url
+        else:
+            if utils.is_url(txt) == True:
+                st.error("Input is not a text!")
         dieu_dict = utils.create_Dict(txt)
         if (len(dieu_dict) >0):
             btns=[]
