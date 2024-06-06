@@ -37,12 +37,12 @@ def add_dot(input):
 
 def remove_unnecessary(input):
 
-    for dieu in range(1, 100):
+    for dieu in range(1, 1000):
         sub_str = "Điều " + str(dieu) + "."
         new_sub_str = "Điều " + str(dieu) + "_"
         input = input.replace(sub_str, new_sub_str)
 
-    for num in range(1, 100):
+    for num in range(1, 1000):
         sub_str = str(num) + ". "
         input = input.replace(sub_str, "")
 
@@ -62,7 +62,7 @@ def TF_IDF_news(text, max_char):
 def create_Dict(input) -> dict:
     Dieu_dict = {}
     D_found = []
-    for dieu in range(1, 100):
+    for dieu in range(1, 1000):
         sub_str = "Điều " + str(dieu) + "."
         D_found.append(input.find(sub_str))
 

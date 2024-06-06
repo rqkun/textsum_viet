@@ -88,8 +88,11 @@ if formbtn or st.session_state.formbtn_state:
 
         if submit_form:
             my_bar.progress(0, text="Applying TF-IDF...")
-
-            tfidf_txt = utils.TF_IDF_laws(txt, source, max_char)
+            dieu = ""
+            for key, value in dieu_dict.items():
+                if value == source:
+                    dieu = key + "\n" + source
+            tfidf_txt = utils.TF_IDF_laws(txt, dieu, max_char)
             my_bar.progress(50, text="Summarizing...")
 
             custom_dialogue=tfidf_txt
