@@ -38,15 +38,14 @@ with st.sidebar:
     num_beams = st.slider("Number of beams", 1, 10, 8)
 
 
-txt = st.text_area("Input text",label_visibility="collapsed")
+txt = st.text_area("Input text for summary.")
 progress_text = "Enter the text for summary."
-col1,col2=st.columns(2)
-with col1:
-    my_bar = st.progress(0, text=progress_text)
-with col2:
-    sumbt = st.button("Submit",use_container_width=True,type="primary")
-if sumbt:
-    if txt != "":
+submit_button = st.button(label="Summary", help="Click to Summary", use_container_width=True)
+
+if txt != "":
+    if submit_button:
+        my_bar = st.progress(0, text=progress_text)
+
         my_bar.progress(0, text="Applying TF-IDF...")
         tfidf_txt = utils.TF_IDF_news(txt, max_char)
         my_bar.progress(50, text="Summarizing...")
@@ -58,6 +57,6 @@ if sumbt:
         my_bar.progress(100, text="Finish!")
         oldtext = summary[0]["summary_text"]
         showdialog(summary[0]["summary_text"])
-        
-    else:
-        st.error("Please enter text!")
+    
+else:
+    st.error("Please enter text!")
