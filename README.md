@@ -7,7 +7,7 @@ Website có một số chức năng hữu ích như sau:
 2. Tóm báo chí thông qua văn bản nhập vào.
 3. Tóm tắt điều luật thông qua văn bản nhập vào và đường dẫn được nhập vào.
 
-Chúng tôi đã sử dụng [Streamlit](https://streamlit.io/) framework để xây dựng lên website này, cùng với thư viện [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) và NEWSDATA.IO API(https://newsdata.io/) cho chức năng tóm tắt tin tức báo chí mới nhất. Đồng thời chứng tôi đã tinh chỉnh mô hình BART trên tập dữ liệu báo chí và luật pháp trên ngôn ngữ tiếng Việt để tạo nên mô hình được sử dụng trong website này.
+Chúng tôi đã sử dụng [Streamlit](https://streamlit.io/) framework để xây dựng lên website này, cùng với thư viện [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) và [NEWSDATA.IO](https://newsdata.io/) API cho chức năng tóm tắt tin tức báo chí mới nhất. Đồng thời chứng tôi đã tinh chỉnh mô hình BART trên tập dữ liệu báo chí và luật pháp trên ngôn ngữ tiếng Việt để tạo nên mô hình được sử dụng trong website này.
 ## 2. Khởi chạy ứng dụng
 Để có thể khởi chạy ứng dụng có 2 cách:
 1. Cách đầu tiên là mở cửa sổ command prompt ngay trong thư mục và chạy lệnh
