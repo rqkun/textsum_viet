@@ -32,6 +32,7 @@ lawspipe = loading_laws_model()
 length_penalty = 1
 num_beams = 8
 max_char = 1024
+
 #SIDE
 st.sidebar.header("Custom generation options:")
 with st.sidebar:
@@ -44,21 +45,6 @@ with st.sidebar:
 txt = st.text_area("".join(["Input ",input_option," for summary. Press Ctrl + Enter to Submit"]))
 
 progress_text = "Enter the text for summary."
-
-# col1,col2=st.columns(2)
-# placeholder_for_prog = st.empty()
-# with placeholder_for_prog:
-#     with col1:
-#         my_bar = st.progress(0, text=progress_text)
-#     with col2:
-#         formbtn = st.button("Submit",use_container_width=True,type="primary")
-
-
-# if "formbtn_state" not in st.session_state:
-#     st.session_state.formbtn_state = False
-
-# if formbtn or st.session_state.formbtn_state:
-#     st.session_state.formbtn_state = True
 
 if txt != "":
     if input_option == "URL":
@@ -90,8 +76,6 @@ if txt != "":
         
         with placeholder_for_texta:
             st.text_area("input",label_visibility="hidden",value=source,disabled=True)
-        #with st.form(key = 'choice'):
-        #submit_form = st.form_submit_button(label="Summary", help="Click to Summary", use_container_width=True)
         if submit_form:
             my_bar.progress(0, text="Applying TF-IDF...")
             dieu = ""

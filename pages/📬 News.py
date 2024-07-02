@@ -31,7 +31,7 @@ max_char = 1024
 def showdialog(a):
     st.write(a)
 
-# You can also use "with" notation:
+
 st.sidebar.header("Custom generation options:")
 with st.sidebar:
     length_penalty = st.slider("Length penalty", 0.5, 1.0, 1.0, 0.1)
